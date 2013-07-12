@@ -1,0 +1,14 @@
+{% extends "wheelcms_axle/base.html" %}
+
+{% block base_main %}
+<div class="row">
+  <div class="span12">
+    <h1>Comment posted at XXXX</h1>
+  </div>
+</div>
+<div class="row">
+  <div class="span12">
+    {{content.body|safe}}
+  </div>
+</div>
+{% endblock %}
