@@ -1,12 +1,11 @@
 from setuptools import setup, find_packages
-import os
 
 version = '0.1'
 
 setup(name='wheelcms_comments',
       version=version,
       description="WheelCMS comments package",
-      long_description=open("README.txt").read()
+      long_description=open("README.md").read(),
       classifiers=[
         "Programming Language :: Python",
         ],
