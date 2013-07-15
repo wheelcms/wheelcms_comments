@@ -82,6 +82,9 @@ def handle_comment_post(handler, request, action):
     c = Comment(title=title, name=name, body=body, node=n).save()
 
     ## log details (ip, etc) in description, or add extra fields
+    ## send notification, if enabled
+    ## optionally 'recognize' the user and show the comment only to him/her
+    ## allow approval/rejection of comment through view?
 
     return handler.redirect(handler.instance.get_absolute_url(), info="Your comment is being processed")
 

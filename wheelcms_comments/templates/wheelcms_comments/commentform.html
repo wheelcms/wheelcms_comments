@@ -1,12 +1,12 @@
 {% if comments %}
 <h3>Comments</h3>
 {% for comment in comments %}
-<div class="row">
+<div class="row {% if comment.state != 'published' %}disabled-content {% endif %}">
   <div class="span12">
     <h4>Comment posted at {{comment.created}} by {{comment.name}}</h4>
   </div>
 </div>
-<div class="row">
+<div class="row {% if comment.state != 'published' %}disabled-content {% endif %}">
   <div class="span12">
     {{comment.body}}
     <hr>
