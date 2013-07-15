@@ -14,16 +14,16 @@ class CommentBase(Content):
         abstract = True
 
     ## gravatar oid?
+    name = models.TextField(blank=False)
     body = models.TextField(blank=False)
 
 class Comment(CommentBase):
     pass
 
-class CommentForm(formfactory(Comment)):
-    pass
-    ## captcha
-
-    ## body doesn't have to be rich
+class CommentForm(forms.Form):
+    name = forms.Field()
+    body = forms.CharField(widget=forms.Textarea(attrs={'rows':8, 'cols':40}))
+    captcha = forms.CharField(help_text="Hier komt een echte captcha")
 
 
 class CommentType(Spoke):
@@ -32,12 +32,12 @@ class CommentType(Spoke):
     discussable = False    # well...
 
     model = Comment
-    form = CommentForm
+    form = formfactory(Comment)
 
     title = "A comment"
     # type_icon = icon = ..
 
-template_registry.register(CommentType, "wheelcms_comments/comment_view", "Comment View", default=True)
+template_registry.register(CommentType, "wheelcms_comments/comment_view.html", "Comment View", default=True)
 
 type_registry.register(CommentType)
 
@@ -52,3 +52,26 @@ class ConfigurationForm(forms.ModelForm):
         exclude = ['main']
 
 configuration_registry.register("comments", "Comments", Configuration, ConfigurationForm)
+
+
+from wheelcms_axle.actions import action_registry
+from django.utils import timezone
+import random
+
+def handle_comment_post(handler, request, action):
+    
+    ## On error, jump to the comment form anchor
+    ## probably needs JS since we're returingthe form inline
+    name = request.POST.get('name')
+    body = request.POST.get('body')
+
+    id = "%s-%s" % (timezone.now().strftime("%Y%m%d%H%M%S"), random.randint(0,1000))
+    title = "Comment by %s on %s" % (name, timezone.now())
+    n = handler.instance.add(id)
+    c = Comment(title=title, name=name, body=body, node=n).save()
+
+    ## log details (ip, etc) in description, or add extra fields
+
+    return handler.redirect(handler.instance.get_absolute_url(), info="Your comment is being processed")
+
+action_registry.register(handle_comment_post, "post_comment")

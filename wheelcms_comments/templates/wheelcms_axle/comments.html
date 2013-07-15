@@ -1,13 +1,8 @@
+{% load wheel_comments %}
 {% with commentconf=config.comments.get %}
-{% if commentconf.enabled %}
+  {% if commentconf.enabled %}
 
-{# iterate over published comments #}
-{# show reply option #}
+    {% commentform %}
 
-{# implement and use a template tag so we can execute some python code to render the form? #}
-
-{% commentform %}
-DIT IS DE COMMENT MEUK!!!
-
-{% endif %}
+  {% endif %}
 {% endwith %}
