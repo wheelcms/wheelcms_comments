@@ -21,8 +21,8 @@ class Comment(CommentBase):
     pass
 
 class CommentForm(forms.Form):
-    name = forms.Field()
-    body = forms.CharField(widget=forms.Textarea(attrs={'rows':8, 'cols':40}))
+    name = forms.Field(required=True)
+    body = forms.CharField(widget=forms.Textarea(attrs={'rows':8, 'cols':40}), required=True)
     captcha = forms.CharField(help_text="Hier komt een echte captcha")
 
 
@@ -60,13 +60,24 @@ import random
 
 def handle_comment_post(handler, request, action):
     
+    form = CommentForm(request.POST)
+    if not form.is_valid():
+        ## since we're redirecting, use sessions to temporarily store
+        ## the comment data
+        request.session['comment_post'] = request.POST
+        return handler.redirect(handler.instance.get_absolute_url(),
+                                error="Please fix your errors",
+                                hash="commentform")
     ## On error, jump to the comment form anchor
     ## probably needs JS since we're returingthe form inline
     name = request.POST.get('name')
     body = request.POST.get('body')
+    captcha = request.POST.get('body')
 
-    id = "%s-%s" % (timezone.now().strftime("%Y%m%d%H%M%S"), random.randint(0,1000))
+    id = "%s-%s" % (timezone.now().strftime("%Y%m%d%H%M%S"),
+                    random.randint(0,1000))
     title = "Comment by %s on %s" % (name, timezone.now())
+
     n = handler.instance.add(id)
     c = Comment(title=title, name=name, body=body, node=n).save()
 

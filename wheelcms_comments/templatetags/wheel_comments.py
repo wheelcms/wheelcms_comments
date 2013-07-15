@@ -15,9 +15,15 @@ class CommentFormNode(template.Node):
         pass
 
     def render(self, context):
-        form = CommentForm()
+        request = context['request']
+        if 'comment_post' in request.session:
+            data = request.session['comment_post']
+            del request.session['comment_post']
+            form = CommentForm(data)
+        else:
+            form = CommentForm()
         
         comments = [x.content() for x in context['instance'].children().filter(contentbase__meta_type=Comment.classname)]
         return render_to_string("wheelcms_comments/commentform.html", 
             {'form':form, 'comments':comments},
-            context_instance=RequestContext(context['request']))
+            context_instance=RequestContext(request))

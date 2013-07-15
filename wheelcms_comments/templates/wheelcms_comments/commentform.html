@@ -1,9 +1,9 @@
-<h2>Comments</h2>
-
+{% if comments %}
+<h3>Comments</h3>
 {% for comment in comments %}
 <div class="row">
   <div class="span12">
-    <h3>Comment posted at {{comment.created}} by {{comment.name}}</h3>
+    <h4>Comment posted at {{comment.created}} by {{comment.name}}</h4>
   </div>
 </div>
 <div class="row">
@@ -12,16 +12,14 @@
     <hr>
   </div>
 </div>
-{% empty %}
-<div class="row">
-  <div class="span12">
-    <h3>No comments</h3>
-  </div>
-</div>
-
 {% endfor %}
+{% else %}
+<h3>No comments</h3>
+{% endif %}
 
 
+
+<a name="commentform"><h3>Post a comment:</h3></a>
 <form method="post" action="+post_comment/"
       class="form-horizontal" >
 
