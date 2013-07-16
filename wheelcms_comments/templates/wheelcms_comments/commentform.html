@@ -4,6 +4,9 @@
 <div class="row {% if comment.state != 'published' %}disabled-content {% endif %}">
   <div class="span12">
     <h4>Comment posted at {{comment.created}} by {{comment.name}}</h4>
+    {% if ha %}
+    <a href="{{comment.get_absolute_url}}edit">Edit/delete/publish this comment</a>
+    {% endif %}
   </div>
 </div>
 <div class="row {% if comment.state != 'published' %}disabled-content {% endif %}">

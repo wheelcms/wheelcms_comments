@@ -81,6 +81,9 @@ def handle_comment_post(handler, request, action):
     n = handler.instance.add(id)
     c = Comment(title=title, name=name, body=body, node=n).save()
 
+    if 'posted_comments' not in request.session:
+        request.session['posted_comments'] = []
+    request.session['posted_comments'].append(c.node.path)
     ## log details (ip, etc) in description, or add extra fields
     ## send notification, if enabled
     ## optionally 'recognize' the user and show the comment only to him/her
