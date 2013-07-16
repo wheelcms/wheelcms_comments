@@ -1,5 +1,7 @@
 from django.db import models
 from django import forms
+from django.core.mail import send_mail
+from django.contrib.sites.models import Site
 
 from wheelcms_axle.models import Configuration as BaseConfiguration
 from wheelcms_axle.registries.configuration import configuration_registry
@@ -68,12 +70,12 @@ def handle_comment_post(handler, request, action):
         return handler.redirect(handler.instance.get_absolute_url(),
                                 error="Please fix your errors",
                                 hash="commentform")
-    ## On error, jump to the comment form anchor
-    ## probably needs JS since we're returingthe form inline
+
     name = request.POST.get('name')
     body = request.POST.get('body')
     captcha = request.POST.get('body')
 
+    ## if someone tries really really hard...
     id = "%s-%s" % (timezone.now().strftime("%Y%m%d%H%M%S"),
                     random.randint(0,1000))
     title = "Comment by %s on %s" % (name, timezone.now())
@@ -84,11 +86,36 @@ def handle_comment_post(handler, request, action):
     if 'posted_comments' not in request.session:
         request.session['posted_comments'] = []
     request.session['posted_comments'].append(c.node.path)
+
+    baseconf = BaseConfiguration.config()
+    notify = baseconf.comments.get().notify_address.strip()
+    sender = baseconf.sendermail.strip()
+
+    if notify and sender:
+        content = handler.instance.content()
+        domain = Site.objects.get_current().domain
+        content_url = "http://%s%s" % (domain, content.get_absolute_url())
+        comment_url = "http://%s%s" % (domain, n.get_absolute_url())
+
+        send_mail('New comment on "%s"' % content.title,
+                  """A new comment has been posted on "%(title)s" %(content_url)s:
+
+Name: %(name)s
+Content:
+%(body)s
+
+View/edit/delete comment: %(comment_url)sedit""" % dict(title=content.title, content_url=content_url, comment_url=comment_url, name=name, body=body),
+
+                  'ivo@m3r.nl', ## XXX get from settings
+                  [notify],
+                  fail_silently=True)
+
     ## log details (ip, etc) in description, or add extra fields
     ## send notification, if enabled
     ## optionally 'recognize' the user and show the comment only to him/her
     ## allow approval/rejection of comment through view?
 
-    return handler.redirect(handler.instance.get_absolute_url(), info="Your comment is being processed")
+    return handler.redirect(handler.instance.get_absolute_url(),
+                            info="Your comment is being processed")
 
 action_registry.register(handle_comment_post, "post_comment")
