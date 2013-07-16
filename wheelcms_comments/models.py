@@ -86,6 +86,8 @@ def handle_comment_post(handler, request, action):
     if 'posted_comments' not in request.session:
         request.session['posted_comments'] = []
     request.session['posted_comments'].append(c.node.path)
+    request.session.modified = True
+    
 
     baseconf = BaseConfiguration.config()
     notify = baseconf.comments.get().notify_address.strip()
@@ -98,7 +100,7 @@ def handle_comment_post(handler, request, action):
         comment_url = "http://%s%s" % (domain, n.get_absolute_url())
 
         send_mail('New comment on "%s"' % content.title,
-                  """A new comment has been posted on "%(title)s" %(content_url)s:
+                  """A new comment has been posted on "%(title)s" %(content_url)s
 
 Name: %(name)s
 Content:
@@ -106,7 +108,7 @@ Content:
 
 View/edit/delete comment: %(comment_url)sedit""" % dict(title=content.title, content_url=content_url, comment_url=comment_url, name=name, body=body),
 
-                  'ivo@m3r.nl', ## XXX get from settings
+                  sender,
                   [notify],
                   fail_silently=True)
 

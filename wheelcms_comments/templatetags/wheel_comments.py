@@ -15,17 +15,7 @@ class CommentFormNode(template.Node):
     def __init__(self):
         pass
 
-    def render(self, context):
-        request = context['request']
-        instance = context['instance']
-
-        if 'comment_post' in request.session:
-            data = request.session['comment_post']
-            del request.session['comment_post']
-            form = CommentForm(data)
-        else:
-            form = CommentForm()
-        
+    def show_comments(self, instance, request):
         ha = has_access(request.user, instance)
 
         # if ha, show all, else show published + owner (from session)
@@ -38,8 +28,26 @@ class CommentFormNode(template.Node):
         if not ha:
             comments = [c for c in comments
                         if c.state == "published" or c.node.path in mine]
+        return comments
 
+    def _render(self, request, context, instance):
+        if 'comment_post' in request.session:
+            data = request.session['comment_post']
+            del request.session['comment_post']
+            form = CommentForm(data)
+        else:
+            form = CommentForm()
 
-        return render_to_string("wheelcms_comments/commentform.html",
-            {'form':form, 'comments':comments, 'ha':ha},
-            context_instance=RequestContext(request))
+        ha = has_access(request.user, instance)
+
+        comments = self.show_comments(instance, request)
+
+        return ("wheelcms_comments/commentform.html",
+                {'form':form, 'comments':comments, 'ha':ha})
+
+    def render(self, context):
+        request = context['request']
+        instance = context['instance']
+        template, context = self._render(request, context, instance)
+        return render_to_string(template, context,
+                          context_instance=RequestContext(request))
