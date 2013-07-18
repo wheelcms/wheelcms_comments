@@ -33,4 +33,3 @@ if __name__ == '__main__':
         USE_TZ=True,
         STATIC_URL='/',
     )
-
