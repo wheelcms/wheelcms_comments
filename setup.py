@@ -21,6 +21,7 @@ setup(name='wheelcms_comments',
       install_requires=[
           'setuptools',
           'pytest',
+          'django-simple-captcha'
       ],
       entry_points={
       },
