@@ -31,6 +31,8 @@ class CommentForm(forms.Form):
                            required=True)
 
     if not settings.TESTING:
+        ## Do not include this field when running unittests. Make sure you
+        ## have test settings with TESTING=True
         captcha = CaptchaField()
 
 
