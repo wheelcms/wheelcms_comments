@@ -2,6 +2,9 @@ from django.db import models
 from django import forms
 from django.core.mail import send_mail
 from django.contrib.sites.models import Site
+from django.conf import settings
+
+from captcha.fields import CaptchaField
 
 from wheelcms_axle.models import Configuration as BaseConfiguration
 from wheelcms_axle.registries.configuration import configuration_registry
@@ -24,8 +27,11 @@ class Comment(CommentBase):
 
 class CommentForm(forms.Form):
     name = forms.Field(required=True)
-    body = forms.CharField(widget=forms.Textarea(attrs={'rows':8, 'cols':40}), required=True)
-    captcha = forms.CharField(help_text="Hier komt een echte captcha")
+    body = forms.CharField(widget=forms.Textarea(attrs={'rows':8, 'cols':40}),
+                           required=True)
+
+    if not settings.TESTING:
+        captcha = CaptchaField()
 
 
 class CommentType(Spoke):
