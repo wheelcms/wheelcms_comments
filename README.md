@@ -10,7 +10,7 @@ Installation
 
 Add wheelcms_comments to your INSTALLED_APPS
 
-wheelcms_comments uses django-simple-captcha, so you will need to include this
+wheelcms_comments uses [django-simple-captcha](https://django-simple-captcha.readthedocs.org/en/latest/usage.html), so you will need to include this
 as well:
 
 Add 
