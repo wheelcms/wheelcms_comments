@@ -21,7 +21,8 @@ class CommentFormNode(template.Node):
         # if ha, show all, else show published + owner (from session)
         comments = [x.content()
                     for x in instance.children().filter(
-                          contentbase__meta_type=Comment.classname)]
+                          contentbase__meta_type=Comment.classname,
+                          contentbase__state__in=("pending", "published"))]
         mine = request.session.get('posted_comments', [])
 
 

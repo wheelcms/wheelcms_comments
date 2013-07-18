@@ -81,7 +81,7 @@ def handle_comment_post(handler, request, action):
     title = "Comment by %s on %s" % (name, timezone.now())
 
     n = handler.instance.add(id)
-    c = Comment(title=title, name=name, body=body, node=n).save()
+    c = Comment(title=title, name=name, body=body, node=n, state="pending").save()
 
     if 'posted_comments' not in request.session:
         request.session['posted_comments'] = []
@@ -90,7 +90,11 @@ def handle_comment_post(handler, request, action):
     
 
     baseconf = BaseConfiguration.config()
-    notify = baseconf.comments.get().notify_address.strip()
+    try:
+        notify = baseconf.comments.get().notify_address.strip()
+    except Configuration.DoesNotExist:
+        notify = ""
+
     sender = baseconf.sendermail.strip()
 
     if notify and sender:
