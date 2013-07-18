@@ -2,8 +2,9 @@ from twotest.quicktest import QuickDjangoTest
 
 if __name__ == '__main__':
     QuickDjangoTest(
-        apps=("wheelcms_axle",),
+        apps=("wheelcms_comments",),
         installed_apps=(
+            ## these are mostly wheelcms_axle's dependencies
             'django.contrib.sites',
             'django.contrib.messages',
             'django.contrib.staticfiles',
@@ -13,6 +14,7 @@ if __name__ == '__main__':
             'haystack',
 
             'wheelcms_axle',
+            'wheelcms_comments',
 
             'taggit',
             'two.ol',
