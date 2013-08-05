@@ -53,9 +53,8 @@ msgid "by"
 msgstr "door"
 
 #: templates/wheelcms_comments/commentform.html:2
-#, fuzzy
 msgid "Comments"
-msgstr "Commentaar view"
+msgstr "Reakties"
 
 #: templates/wheelcms_comments/commentform.html:8
 msgid "Edit/delete/publish this comment"
