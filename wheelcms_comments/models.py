@@ -4,6 +4,7 @@ from django.core.mail import send_mail
 from django.contrib.sites.models import Site
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext
 
 from captcha.fields import CaptchaField
 
@@ -77,7 +78,7 @@ def handle_comment_post(handler, request, action):
         ## the comment data
         request.session['comment_post'] = request.POST
         return handler.redirect(handler.instance.get_absolute_url(),
-                                error=_("Please fix your errors"),
+                                error=ugettext("Please fix your errors"),
                                 hash="commentform")
 
     name = request.POST.get('name')
