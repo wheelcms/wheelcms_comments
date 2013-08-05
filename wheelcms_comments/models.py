@@ -3,6 +3,7 @@ from django import forms
 from django.core.mail import send_mail
 from django.contrib.sites.models import Site
 from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
 
 from captcha.fields import CaptchaField
 
@@ -26,14 +27,14 @@ class Comment(CommentBase):
     pass
 
 class CommentForm(forms.Form):
-    name = forms.Field(required=True)
-    body = forms.CharField(widget=forms.Textarea(attrs={'rows':8, 'cols':40}),
+    name = forms.Field(label=_('Name'), required=True)
+    body = forms.CharField(label=_('Body'), widget=forms.Textarea(attrs={'rows':8, 'cols':40}),
                            required=True)
 
     if not settings.TESTING:
         ## Do not include this field when running unittests. Make sure you
         ## have test settings with TESTING=True
-        captcha = CaptchaField()
+        captcha = CaptchaField(label=_('Captcha'))
 
 
 class CommentType(Spoke):
@@ -47,7 +48,7 @@ class CommentType(Spoke):
     title = "A comment"
     # type_icon = icon = ..
 
-template_registry.register(CommentType, "wheelcms_comments/comment_view.html", "Comment View", default=True)
+template_registry.register(CommentType, "wheelcms_comments/comment_view.html", _("Comment View"), default=True)
 
 type_registry.register(CommentType)
 
@@ -76,7 +77,7 @@ def handle_comment_post(handler, request, action):
         ## the comment data
         request.session['comment_post'] = request.POST
         return handler.redirect(handler.instance.get_absolute_url(),
-                                error="Please fix your errors",
+                                error=_("Please fix your errors"),
                                 hash="commentform")
 
     name = request.POST.get('name')
@@ -86,7 +87,7 @@ def handle_comment_post(handler, request, action):
     ## if someone tries really really hard...
     id = "%s-%s" % (timezone.now().strftime("%Y%m%d%H%M%S"),
                     random.randint(0,1000))
-    title = "Comment by %s on %s" % (name, timezone.now())
+    title = _("Comment by %(owner)s on %(date)s") % dict(owner=name, date=timezone.now())
 
     n = handler.instance.add(id)
     c = Comment(title=title, name=name, body=body, node=n, state="pending").save()

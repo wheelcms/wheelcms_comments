@@ -1,0 +1,70 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-08-05 13:44+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: models.py:30
+msgid "Name"
+msgstr "Naam"
+
+#: models.py:31
+msgid "Body"
+msgstr "Bericht"
+
+#: models.py:37
+msgid "Captcha"
+msgstr "Captcha"
+
+#: models.py:51
+msgid "Comment View"
+msgstr "Commentaar view"
+
+#: models.py:80
+msgid "Please fix your errors"
+msgstr "Herstel alstublieft de aangegeven fouten"
+
+#: models.py:90
+#, python-format
+msgid "Comment by %(owner)s on %(date)s"
+msgstr "Commentaar van %(owner)s op %(date)s"
+
+#: templates/wheelcms_comments/comment_view.html:6
+#: templates/wheelcms_comments/commentform.html:6
+msgid "Comment posted at"
+msgstr "Commentaar geplaatst op"
+
+#: templates/wheelcms_comments/comment_view.html:6
+#: templates/wheelcms_comments/commentform.html:6
+msgid "by"
+msgstr "door"
+
+#: templates/wheelcms_comments/commentform.html:2
+#, fuzzy
+msgid "Comments"
+msgstr "Commentaar view"
+
+#: templates/wheelcms_comments/commentform.html:8
+msgid "Edit/delete/publish this comment"
+msgstr "Bewerk/verwijd/publiceer deze reaktie"
+
+#: templates/wheelcms_comments/commentform.html:20
+msgid "No comments"
+msgstr "Geen reakties"
+
+#: templates/wheelcms_comments/commentform.html:33
+msgid "Send"
+msgstr "Verstuur"

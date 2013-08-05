@@ -1,11 +1,13 @@
+{% load i18n %}
+
 {% if comments %}
-<h3>Comments</h3>
+<h3>{% trans "Comments" %}</h3>
 {% for comment in comments %}
 <div class="row {% if comment.state != 'published' %}disabled-content {% endif %}">
   <div class="span12">
-    <h4>Comment posted at {{comment.created}} by {{comment.name}}</h4>
+    <h4>{% trans "Comment posted at" %} {{comment.created}} {% trans "by" %} {{comment.name}}</h4>
     {% if ha %}
-    <a href="{{comment.get_absolute_url}}edit">Edit/delete/publish this comment</a>
+    <a href="{{comment.get_absolute_url}}edit">{% trans "Edit/delete/publish this comment" %}</a>
     {% endif %}
   </div>
 </div>
@@ -17,12 +19,12 @@
 </div>
 {% endfor %}
 {% else %}
-<h3>No comments</h3>
+<h3>{% trans "No comments" %}</h3>
 {% endif %}
 
 
 
-<a name="commentform"><h3>Post a comment:</h3></a>
+<a name="commentform"><h3>{% trans "Post a comment" %}:</h3></a>
 <form method="post" action="+post_comment/"
       class="form-horizontal" >
 
@@ -30,7 +32,7 @@
 
     {% include "two.bootstrap/bootstrap-form.html" with fields=form.content_fields %}
     <div class="form-actions">
-       <input class="btn primary" type="submit" value="Publish">
+       <input class="btn primary" type="submit" value="{% trans "Send" %}">
     </div>
 
 </form>
