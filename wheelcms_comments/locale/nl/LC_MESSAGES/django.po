@@ -54,7 +54,7 @@ msgstr "door"
 
 #: templates/wheelcms_comments/commentform.html:2
 msgid "Comments"
-msgstr "Reakties"
+msgstr "Reacties"
 
 #: templates/wheelcms_comments/commentform.html:8
 msgid "Edit/delete/publish this comment"
