@@ -1,6 +1,8 @@
 WheelCMS comments
 =================
 
+![Build status](https://travis-ci.org/wheelcms/wheelcms_comments.png)
+
 This package provides support for simple (local) comments on WheelCMS content.
 It's similar to the
 [wheelcms_disqus package](https://github.com/wheelcms/wheelcms_disqus/), but does
@@ -40,3 +42,4 @@ You can also enable/disable comments on a per-content basis.
 New contents will be created as WheelCMS content (content type Comment)
 with an initial state 'pending'. You can use the workflow dropup in the
 toolbar to moderate pending comments.
+

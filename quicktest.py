@@ -32,5 +32,7 @@ if __name__ == '__main__':
         TEST_MEDIA_ROOT="/tmp/wheelcms_axle_test",
         USE_TZ=True,
         STATIC_URL='/',
-        TESTING=True
+        TESTING=True,
+        CONTENT_LANGUAGES=(('en', 'English'), ('nl', 'Nederlands')),
+        FALLBACK='en',
     )
