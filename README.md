@@ -11,7 +11,24 @@ not require an external service.
 Installation
 ------------
 
-Add wheelcms_comments to your INSTALLED_APPS
+Add wheelcms_comments to your INSTALLED_APPS *before* the wheelcms_axle package, e.g.
+
+    INSTALLED_APPS = (
+        "wheelcms_comments",
+          ...
+        "wheelcms_axle",
+    )
+
+
+if your base definition of INSTALLED_APPS is out of your direct control
+(e.g. when using
+[wheelcms_project](https://github.com/wheelcms/wheelcms_project)), try
+something like this:
+
+    INSTALLED_APPS = (
+        "wheelcms_comments",
+    ) + INSTALLED_APPS
+
 
 wheelcms_comments uses [django-simple-captcha](https://django-simple-captcha.readthedocs.org/en/latest/usage.html), so you will need to include this
 as well:
