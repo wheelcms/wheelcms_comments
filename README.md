@@ -28,3 +28,15 @@ django-simple-captcha  depends on the PIL library. You may need to install "pyth
 
 Lastly, add 'captcha' to your INSTALLED_APPS
 
+Using comments
+--------------
+
+Now you should be able to enable commenting in your site's settings (save
+the settings the first time, it may show incorrectly that comments are
+already enabled).
+
+You can also enable/disable comments on a per-content basis.
+
+New contents will be created as WheelCMS content (content type Comment)
+with an initial state 'pending'. You can use the workflow dropup in the
+toolbar to moderate pending comments.
