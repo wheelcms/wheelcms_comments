@@ -41,7 +41,9 @@ Add
         url(r'^captcha/', include('captcha.urls')),
     )
 
-to your urls.py
+to your urls.py. Like with the INSTALLED_APPS, make sure the captcha
+pattern matches *before* the base patterns or else the WheelCMS patterns
+will intercept the /captcha requests.
 
 django-simple-captcha  depends on the PIL library. You may need to install "python-imaging" or Pillow depending on your OS/Distribution. You will also need FreeType support with your PIL.
 
