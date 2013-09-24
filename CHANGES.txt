@@ -1,2 +1,2 @@
 v0.1, 2013-07-12 -- Package created
-
+v0.2i, 2013-09-14 -- Documentation updates; migrations

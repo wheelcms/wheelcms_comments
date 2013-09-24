@@ -62,3 +62,10 @@ New contents will be created as WheelCMS content (content type Comment)
 with an initial state 'pending'. You can use the workflow dropup in the
 toolbar to moderate pending comments.
 
+Upgrade notes
+-------------
+
+pre 0.2 users should fake migrate the first migration:
+
+    manage.py migrate wheelcms_comments 0001 --fake
+
