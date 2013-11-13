@@ -108,7 +108,7 @@ def handle_comment_post(handler, request, action):
 
     if notify and sender:
         content = handler.instance.content()
-        domain = Site.objects.get_current().domain
+        domain = getattr(settings, 'VALVE_ADMIN_URL', Site.objects.get_current().domain)
         content_url = "http://%s%s" % (domain, content.get_absolute_url())
         comment_url = "http://%s%s" % (domain, n.get_absolute_url())
 
