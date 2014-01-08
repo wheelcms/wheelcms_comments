@@ -18,62 +18,65 @@ class TestComments(object):
     """
         Test specific comment behaviour
     """
-    def test_comment_initial_state(self, client):
+    def test_comment_initial_state(self, client, root):
         """ The initial state of a comment is 'pending' """
-        n = Node.root()
-        t = Type1(node=n).save()
+        t = Type1(node=root).save()
         req = superuser_request("/", method="POST", name="1", body="1", captcha="1")
-        handler = MainHandler(request=req, instance=n)
+        handler = MainHandler(request=req, instance=root)
         try:
             handle_comment_post(handler, req, "+post_comment")
         except Redirect:
             pass  ## expected
-        assert n.children()[0].content().state == "pending"
+        assert root.children()[0].content().state == "pending"
 
-    def test_show_comments_authenticated(self, client):
-        """ An authenticated user (with sufficient access) should see pending and published
-            comments """
-        n = Node.root()
-        t = Type1(node=n).save()
-        c1 = Comment(title="1", body="1", state="pending", node=n.add("c1")).save()
-        c2 = Comment(title="2", body="2", state="published", node=n.add("c2")).save()
+    def test_show_comments_authenticated(self, client, root):
+        """ An authenticated user (with sufficient access) should see
+            pending and published comments """
+        t = Type1(node=root).save()
+        c1 = Comment(title="1", body="1", state="pending",
+                     node=root.add("c1")).save()
+        c2 = Comment(title="2", body="2", state="published",
+                     node=root.add("c2")).save()
         cfn = CommentFormNode()
         req = superuser_request("/")
-        res = cfn.show_comments(n, req)
+        res = cfn.show_comments(root, req)
 
         assert len(res) == 2
         assert set(res) == set((c1, c2))
 
-    def test_hide_rejected_authenticated(self, client):
-        """ An authenticated user (with sufficient access) should still not see rejected
-            comments """
-        n = Node.root()
-        t = Type1(node=n).save()
-        c1 = Comment(title="1", body="1", state="rejected", node=n.add("c1")).save()
+    def test_hide_rejected_authenticated(self, client, root):
+        """ An authenticated user (with sufficient access) should still
+            not see rejected comments """
+        t = Type1(node=root).save()
+        c1 = Comment(title="1", body="1", state="rejected",
+             node=root.add("c1")).save()
         cfn = CommentFormNode()
         req = superuser_request("/")
-        res = cfn.show_comments(n, req)
+        res = cfn.show_comments(root, req)
 
         assert len(res) == 0
 
-    def test_show_comments_anonymous(self, client):
+    def test_show_comments_anonymous(self, client, root):
         """ An anonymous user should only see published and "own" comments """
-        n = Node.root()
-        t = Type1(node=n).save()
-        req = create_request("POST", "/", data=dict(name="1", body="1", captcha="1"))
-        handler = MainHandler(request=req, instance=n)
+        t = Type1(node=root).save()
+        req = create_request("POST", "/",
+                             data=dict(name="1", body="1", captcha="1"))
+        handler = MainHandler(request=req, instance=root)
         try:
             handle_comment_post(handler, req, "+post_comment")
         except Redirect:
             pass  ## expected
-        c2 = Comment(title="2", body="2", state="published", node=n.add("c2")).save()
-        rejected = Comment(title="3", body="3", state="rejected", node=n.add("c3")).save()
+        c2 = Comment(title="2", body="2", state="published",
+                     node=root.add("c2")).save()
+        rejected = Comment(title="3", body="3", state="rejected",
+                           node=root.add("c3")).save()
         cfn = CommentFormNode()
-        res = cfn.show_comments(n, req)
+        res = cfn.show_comments(root, req)
 
         assert len(res) == 2
         ## all children except rejected
-        assert set(res) == set(c.content() for c in n.children()) - set((rejected,))
+        assert set(res) == set(c.content() for c in root.children()) - \
+                           set((rejected,))
 
 
 class TestCommentSpokeTemplate(BaseSpokeTemplateTest):
