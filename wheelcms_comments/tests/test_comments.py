@@ -1,3 +1,7 @@
+import pytest
+
+from django.utils import translation
+
 from two.ol.base import Redirect
 from twotest.util import create_request
 
@@ -13,7 +17,7 @@ from wheelcms_comments.models import CommentType
 from wheelcms_comments.models import Comment, handle_comment_post
 from wheelcms_comments.templatetags.wheel_comments import CommentFormNode
 
-
+@pytest.mark.usefixtures("multilang_ENNL")
 class TestComments(object):
     """
         Test specific comment behaviour
@@ -63,10 +67,8 @@ class TestComments(object):
         req = create_request("POST", "/",
                              data=dict(name="1", body="1", captcha="1"))
         handler = MainHandler(request=req, instance=root)
-        try:
-            handle_comment_post(handler, req, "+post_comment")
-        except Redirect:
-            pass  ## expected
+        pytest.raises(Redirect, handle_comment_post,
+                     handler, req, "+post_comment")
         c2 = Comment(title="2", body="2", state="published",
                      node=root.add("c2")).save()
         rejected = Comment(title="3", body="3", state="rejected",
@@ -79,6 +81,36 @@ class TestComments(object):
         assert set(res) == set(c.content() for c in root.children()) - \
                            set((rejected,))
 
+    def test_comment_language_create(self, client, root):
+        """
+            A comment should be created with the same language as its parent
+        """
+        nl = Type1(node=root, language="nl").save()
+        en = Type1(node=root, language="en").save()
+        req = create_request("POST", "/",
+                             data=dict(name="1", body="1", captcha="1"))
+        translation.activate('nl')
+        handler = MainHandler(request=req, instance=root)
+        pytest.raises(Redirect, handle_comment_post,
+                     handler, req, "+post_comment")
+        assert root.children()[0].content().language == 'nl'
+
+    def test_language_filter(self, client, root):
+        """ Only return comments in the current language """
+        en = Type1(node=root, language="en").save()
+        nl = Type1(node=root, language="nl").save()
+
+        nlc = Comment(title="NL comment", body="NL", state="published",
+                     node=root.add("nl_comment"), language="nl").save()
+        enc = Comment(title="EN comment", body="EN", state="published",
+                     node=root.add("en_comment"), language="en").save()
+
+        translation.activate('nl')
+        cfn = CommentFormNode()
+        req = create_request("GET", "/", data=dict())
+        res = cfn.show_comments(root, req)
+        assert len(res) == 1
+        assert res[0].language == "nl"
 
 class TestCommentSpokeTemplate(BaseSpokeTemplateTest):
     """ Test the Comment type """

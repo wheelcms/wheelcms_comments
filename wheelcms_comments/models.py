@@ -24,12 +24,15 @@ class CommentBase(Content):
     name = models.TextField(blank=False)
     body = models.TextField(blank=False)
 
+
 class Comment(CommentBase):
     pass
 
+
 class CommentForm(forms.Form):
     name = forms.Field(label=_('Name'), required=True)
-    body = forms.CharField(label=_('Body'), widget=forms.Textarea(attrs={'rows':8, 'cols':40}),
+    body = forms.CharField(label=_('Body'),
+                           widget=forms.Textarea(attrs={'rows':8, 'cols':40}),
                            required=True)
 
     if not settings.TESTING:
@@ -72,7 +75,9 @@ import random
 from wheelcms_axle.utils import get_active_language
 
 def handle_comment_post(handler, request, action):
-    
+    """
+        Action to create a comment on any Spoke
+    """
     form = CommentForm(request.POST)
     if not form.is_valid():
         ## since we're redirecting, use sessions to temporarily store
@@ -89,18 +94,20 @@ def handle_comment_post(handler, request, action):
     ## if someone tries really really hard...
     id = "%s-%s" % (timezone.now().strftime("%Y%m%d%H%M%S"),
                     random.randint(0,1000))
-    title = _("Comment by %(owner)s on %(date)s") % dict(owner=name, date=timezone.now())
+    title = _("Comment by %(owner)s on %(date)s") % \
+              dict(owner=name, date=timezone.now())
 
     n = handler.instance.add(id)
     lang = get_active_language(request)
 
-    c = Comment(title=title, name=name, body=body, node=n, state="pending", language=lang).save()
+    c = Comment(title=title, name=name, body=body, node=n,
+                state="pending", language=lang).save()
 
     if 'posted_comments' not in request.session:
         request.session['posted_comments'] = []
     request.session['posted_comments'].append(c.node.path)
     request.session.modified = True
-    
+
 
     baseconf = BaseConfiguration.config()
     try:
@@ -117,13 +124,16 @@ def handle_comment_post(handler, request, action):
         comment_url = "http://%s%s" % (domain, n.get_absolute_url())
 
         send_mail('New comment on "%s"' % content.title,
-                  """A new comment has been posted on "%(title)s" %(content_url)s
+        """A new comment has been posted on "%(title)s" %(content_url)s
 
 Name: %(name)s
 Content:
 %(body)s
 
-View/edit/delete comment: %(comment_url)sedit""" % dict(title=content.title, content_url=content_url, comment_url=comment_url, name=name, body=body),
+View/edit/delete comment: %(comment_url)sedit""" % dict(title=content.title,
+                  content_url=content_url,
+                  comment_url=comment_url,
+                  name=name, body=body),
 
                   sender,
                   [notify],
