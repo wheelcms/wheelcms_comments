@@ -2,6 +2,7 @@ WheelCMS comments
 =================
 
 ![Build status](https://travis-ci.org/wheelcms/wheelcms_comments.png)
+[![Coverage Status](https://coveralls.io/repos/wheelcms/wheelcms_comments/badge.png?branch=master)](https://coveralls.io/r/wheelcms/wheelcms_comments?branch=master)
 
 This package provides support for simple (local) comments on WheelCMS content.
 It's similar to the
