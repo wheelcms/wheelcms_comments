@@ -69,6 +69,7 @@ configuration_registry.register("comments", "Comments", Configuration, Configura
 from wheelcms_axle.actions import action_registry
 from django.utils import timezone
 import random
+from wheelcms_axle.utils import get_active_language
 
 def handle_comment_post(handler, request, action):
     
@@ -91,7 +92,9 @@ def handle_comment_post(handler, request, action):
     title = _("Comment by %(owner)s on %(date)s") % dict(owner=name, date=timezone.now())
 
     n = handler.instance.add(id)
-    c = Comment(title=title, name=name, body=body, node=n, state="pending").save()
+    lang = get_active_language(request)
+
+    c = Comment(title=title, name=name, body=body, node=n, state="pending", language=lang).save()
 
     if 'posted_comments' not in request.session:
         request.session['posted_comments'] = []

@@ -3,6 +3,8 @@ from django.template.loader import render_to_string
 from django.template import RequestContext
 
 from wheelcms_axle.access import has_access
+from wheelcms_axle.utils import get_active_language
+
 from wheelcms_comments.models import CommentForm, Comment
 
 register = template.Library()
@@ -18,9 +20,12 @@ class CommentFormNode(template.Node):
     def show_comments(self, instance, request):
         ha = has_access(request.user, instance)
 
+        lang = get_active_language(request)
+
         # if ha, show all, else show published + owner (from session)
         comments = [x.content()
                     for x in instance.children().filter(
+                          contentbase__language=lang,
                           contentbase__meta_type=Comment.classname,
                           contentbase__state__in=("pending", "published"))]
         mine = request.session.get('posted_comments', [])

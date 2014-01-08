@@ -7,8 +7,9 @@ from wheelcms_axle.tests.models import Type1
 from wheelcms_axle.tests.test_handler import superuser_request
 from wheelcms_axle.tests.test_spoke import BaseSpokeTest, BaseSpokeTemplateTest
 from wheelcms_axle.tests.test_impexp import BaseSpokeImportExportTest
-from wheelcms_comments.models import CommentType
+from wheelcms_axle.tests.utils import MockedQueryDict
 
+from wheelcms_comments.models import CommentType
 from wheelcms_comments.models import Comment, handle_comment_post
 from wheelcms_comments.templatetags.wheel_comments import CommentFormNode
 
@@ -81,7 +82,8 @@ class TestCommentSpokeTemplate(BaseSpokeTemplateTest):
 
     def valid_data(self):
         """ return additional data for Comment validation """
-        return dict(name="J. Doe", body="Hello World", captcha="fail")
+        return MockedQueryDict(name="J. Doe", body="Hello World",
+                               captcha="fail")
 
 
 class TestCommentSpoke(BaseSpokeTest):
