@@ -21,7 +21,8 @@ class TestComments(object):
     def test_comment_initial_state(self, client, root):
         """ The initial state of a comment is 'pending' """
         t = Type1(node=root).save()
-        req = superuser_request("/", method="POST", name="1", body="1", captcha="1")
+        req = superuser_request("/", method="POST", name="1",
+                                body="1", captcha="1")
         handler = MainHandler(request=req, instance=root)
         try:
             handle_comment_post(handler, req, "+post_comment")
