@@ -49,7 +49,8 @@ class CommentFormNode(template.Node):
         comments = self.show_comments(instance, request)
 
         return ("wheelcms_comments/commentform.html",
-                {'form':form, 'comments':comments, 'ha':ha})
+                {'form':form, 'comments':comments, 'ha':ha,
+                 'instance':instance, 'content':instance.content()})
 
     def render(self, context):
         request = context['request']
