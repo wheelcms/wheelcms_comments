@@ -130,7 +130,7 @@ Name: %(name)s
 Content:
 %(body)s
 
-View/edit/delete comment: %(comment_url)sedit""" % dict(title=content.title,
+View/edit/delete comment: %(comment_url)sedit#collapseadvanced""" % dict(title=content.title,
                   content_url=content_url,
                   comment_url=comment_url,
                   name=name, body=body),
