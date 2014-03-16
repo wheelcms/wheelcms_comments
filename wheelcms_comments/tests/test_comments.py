@@ -116,10 +116,10 @@ class TestCommentSpokeTemplate(BaseSpokeTemplateTest):
     """ Test the Comment type """
     type = CommentType
 
-    def valid_data(self):
+    def valid_data(self, **kw):
         """ return additional data for Comment validation """
         return MockedQueryDict(name="J. Doe", body="Hello World",
-                               captcha="fail")
+                               captcha="fail", **kw)
 
 
 class TestCommentSpoke(BaseSpokeTest):
