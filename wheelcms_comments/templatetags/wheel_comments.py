@@ -20,7 +20,7 @@ class CommentFormNode(template.Node):
     def show_comments(self, instance, request):
         ha = has_access(request.user, instance)
 
-        lang = get_active_language()
+        lang = instance.content().language
 
         # if ha, show all, else show published + owner (from session)
         comments = [x.content()
