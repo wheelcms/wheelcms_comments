@@ -98,7 +98,7 @@ def handle_comment_post(handler, request, action):
               dict(owner=name, date=timezone.now())
 
     n = handler.instance.add(id)
-    lang = get_active_language(request)
+    lang = get_active_language()
 
     c = Comment(title=title, name=name, body=body, node=n,
                 state="pending", language=lang).save()
