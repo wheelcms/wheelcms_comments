@@ -31,6 +31,7 @@ class Comment(CommentBase):
 
 class CommentForm(forms.Form):
     name = forms.Field(label=_('Name'), required=True)
+    email = forms.EmailField(label=_('Email'), required=True)
     body = forms.CharField(label=_('Body'),
                            widget=forms.Textarea(attrs={'rows':8, 'cols':40}),
                            required=True)
@@ -88,6 +89,7 @@ def handle_comment_post(handler, request, action):
                                 hash="commentform")
 
     name = request.POST.get('name')
+    email = request.POST.get('email')
     body = request.POST.get('body')
     captcha = request.POST.get('body')
 
@@ -95,13 +97,13 @@ def handle_comment_post(handler, request, action):
     id = "%s-%s" % (timezone.now().strftime("%Y%m%d%H%M%S"),
                     random.randint(0,1000))
     title = _("Comment by %(owner)s on %(date)s") % \
-              dict(owner=name, date=timezone.now())
+              dict(owner=(name + " " + email), date=timezone.now())
 
     n = handler.instance.add(id)
     lang = get_active_language()
 
-    c = Comment(title=title, name=name, body=body, node=n,
-                state="pending", language=lang).save()
+    c = Comment(title=title, name=name, body=body, description=email,
+                node=n, state="pending", language=lang).save()
 
     if 'posted_comments' not in request.session:
         request.session['posted_comments'] = []
